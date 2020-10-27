@@ -1,0 +1,43 @@
+function root = steffensen(f,x,xtol,ftol,n_max,display)
+% root = newton(f,fd,x,xtol,ftol,n_max,display)
+% Newton's method for solving f(x)=0.
+% input:  f is a string name or the handle of the function f(x).
+%         fd is a string name of the handle of the derivative f'(x).
+%         x is the initial point
+%         xtol and ftol are termination tolerances
+%         n_max is the maximum number of iterations
+%         display = 1 if step-by-step display is desired,
+%                 = 0 otherwise
+% output: root is the computed root of f(x)=0
+%
+n = 0;
+fx = feval(f,x); % f is either a string name or the handle of f(x)
+F=feval(f,x+fx);
+gx=(F-fx)/fx;
+% fx = f(x);  % f is the handle of f(x)
+
+if display, 
+ disp('   n             x                    f(x)            ')
+   disp('----------------------------------------------------')
+   disp(sprintf('%4d %23.15e %23.15e %23.15e', n, x, fx))
+end
+if abs(fx) <= ftol
+   root = x;
+   return
+end
+
+for n = 1:n_max
+    d=fx/gx;
+    x = x - d;
+    fx = feval(f,x); % f is either a string name or the handle of f(x)
+    F=feval(f,x+fx);
+    gx=(F-fx)/fx;
+    %    fx = f(x);   % f is the handle of f(x)  
+    if display, 
+       disp(sprintf('%4d %23.15e %23.15e %23.15e', n, x, fx)), end
+    if abs(d) <= xtol | abs(fx) <= ftol
+       root = x;
+       return
+    end
+end
+root = x;
